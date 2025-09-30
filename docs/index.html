@@ -1,14 +1,14 @@
 <div style="max-width:900px;margin:auto;">
-<input type="text" id="search" placeholder="Buscar producto por nombre o código..."
-style="width:100%;padding:12px;font-size:16px;border:1px solid #ccc;border-radius:8px;margin-bottom:20px;">
+  <input type="text" id="search" placeholder="Buscar producto por nombre o código..."
+    style="width:100%;padding:12px;font-size:16px;border:1px solid #ccc;border-radius:8px;margin-bottom:20px;">
 
-<div id="results" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;"></div>
+  <div id="results" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;"></div>
 </div>
 
 <script>
 const productos = [
-  { cod: "7862113815314", nombre: "VITASWEET STEVIA X 25GR", pvp: "$2,50", pvf: "$2,08", dist: "$1,67", img: "img/7862113815314.jfif" },
-  { cod: "7862113810012", nombre: "VITASWEET STEVIA X 50GR", pvp: "$4,22", pvf: "$3,52", dist: "$2,81", img: "img/7862113810012.jfif" },
+{ cod: "7862113815314", nombre: "VITASWEET STEVIA X 25GR", pvp: "$2,50", pvf: "$2,08", dist: "$1,67", img: "img/7862113815314.jfif" },
+{ cod: "7862113810012", nombre: "VITASWEET STEVIA X 50GR", pvp: "$4,22", pvf: "$3,52", dist: "$2,81", img: "img/7862113810012.jfif" },
 { cod: "7862113810029", nombre: "VITASWEET STEVIA X 100 GR", pvp: "$7,34", pvf: "$6,12", dist: "$4,89", img: "img/7862113810029.jfif" },
 { cod: "7862113810036", nombre: "VITASWEET STEVIA X 200 GR", pvp: "$13,49", pvf: "$11,24", dist: "$8,99", img: "img/7862113810036.jfif" },
 { cod: "7862113811903", nombre: "VITASWEET STEVIA REPOSTERIA HORNEAR Y COCINAR 380GR", pvp: "$9,80", pvf: "$8,17", dist: "$6,53", img: "img/7862113811903.jfif" },
@@ -172,39 +172,47 @@ const productos = [
 { cod: "7862113815406", nombre: "AROMATIZE AMBIENTE FRORAL 60ML", pvp: "$3.08", pvf: "$2.57", dist: "$2.05", img: "img/7862113815406.jfif" },
 ];
 
-const results = document.getElementById("results");
-const search = document.getElementById("search");
+// Función para mostrar productos
+function renderProducts(lista) {
+  const results = document.getElementById("results");
+  results.innerHTML = "";
 
-function mostrarProductos(lista) {
-results.innerHTML = "";
-if(lista.length === 0){
-results.innerHTML = "<p>No se encontraron productos.</p>";
-return;
+  if (lista.length === 0) {
+    results.innerHTML = "<p>No se encontraron productos.</p>";
+    return;
+  }
+
+  lista.forEach(p => {
+    const card = document.createElement("div");
+    card.style.border = "1px solid #ddd";
+    card.style.borderRadius = "10px";
+    card.style.padding = "10px";
+    card.style.textAlign = "center";
+    card.style.background = "#fff";
+    card.style.boxShadow = "0 2px 5px rgba(0,0,0,0.1)";
+
+    card.innerHTML = `
+      <img src="${p.img}" alt="${p.nombre}" style="max-width:100%;height:150px;object-fit:contain;margin-bottom:10px;">
+      <h3 style="font-size:16px;margin:5px 0;">${p.nombre}</h3>
+      <p><b>Código:</b> ${p.cod}</p>
+      <p><b>PVP:</b> ${p.pvp}</p>
+      <p><b>PVF:</b> ${p.pvf}</p>
+      <p><b>Distribuidor:</b> ${p.dist}</p>
+    `;
+
+    results.appendChild(card);
+  });
 }
-lista.forEach(p => {
-results.innerHTML += `
-<div style="border:1px solid #eee;padding:12px;border-radius:12px;text-align:center;box-shadow:0 2px 5px rgba(59,62,141,255);background:white;">
-<img src="${p.img}" alt="${p.nombre}" style="max-width:100px;margin-bottom:10px;">
-<h3 style="font-size:14px;margin-bottom:8px;">${p.nombre}</h3>
-<p><strong>PVP:</strong> ${p.pvp}</p>
-<p><strong>PVF:</strong> ${p.pvf}</p>
-<p><strong>P. DIST:</strong> ${p.dist}</p>
-<p style="font-size:12px;color:#666;"><strong>Código:</strong> ${p.cod}</p>
-</div>
-`;
-});
-}
 
-mostrarProductos(productos);
+// Mostrar todos los productos al cargar
+renderProducts(productos);
 
-search.addEventListener("input", e => {
-const q = e.target.value.toLowerCase();
-const filtrados = productos.filter(p =>
-p.nombre.toLowerCase().includes(q) ||
-p.cod.includes(q) ||
-p.cod.endsWith(q) // <-- permite buscar por final del código
-);
-mostrarProductos(filtrados);
+// Filtrar en tiempo real
+document.getElementById("search").addEventListener("input", e => {
+  const q = e.target.value.toLowerCase();
+  const filtrados = productos.filter(p =>
+    p.nombre.toLowerCase().includes(q) || p.cod.includes(q)
+  );
+  renderProducts(filtrados);
 });
 </script>
-
